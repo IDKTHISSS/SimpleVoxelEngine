@@ -10,6 +10,8 @@
 #include <string>
 #include <unordered_map>
 #include <functional>
+#include <memory>
+
 enum class LogLevel {
     INFO,
     WARNING,
@@ -19,6 +21,10 @@ enum class LogLevel {
 
 class SimpleConsole {
     public:
+    static std::shared_ptr<SimpleConsole> Get() {
+        static std::shared_ptr<SimpleConsole> _instance = std::make_shared<SimpleConsole>();
+        return _instance;
+    }
     using LogCallback = std::function<void(const LogLevel&, const std::string&)>;
     SimpleConsole();
     using CommandFunc = std::function<void(const std::string&)>;
@@ -44,8 +50,9 @@ private:
     char InputBuf[256] = {};
     bool ScrollToBottom = false;
     std::vector<LogCallback> subscribers;
+
 };
 
 
 
-#endif //SIMPLECONSOLE_H
+#endif

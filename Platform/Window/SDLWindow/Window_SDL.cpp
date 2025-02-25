@@ -111,7 +111,7 @@ void Window_SDL::Init(EWindowMode mode) {
         SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
         m_glContext = SDL_GL_CreateContext(m_window);
         if(!m_glContext) {
-            Core::Application::Get()->GetConsole()->AddLog(LogLevel::ERROR, "Failed to create OpenGL context");
+            //Core::Application::Get()->GetConsole()->AddLog(LogLevel::ERROR, "Failed to create OpenGL context");
         }
         SDL_GL_MakeCurrent(m_window, m_glContext);
         SDL_SetWindowPosition(m_window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);

@@ -11,30 +11,22 @@
 namespace Core {
     class Window;
 
-    class Application {
+    class BaseApplication {
     public:
         bool IsRunning;
 
     public:
-        static std::shared_ptr<Application> Get() {
-            static std::shared_ptr<Application> _instance = std::make_shared<Application>();
-            return _instance;
-        }
-        bool Initialize();
-        void Run();
-        void MainLoop();
-        void RenderFrame();
-        bool UnInitialize();
+
+        virtual bool Initialize();
+        virtual void Run();
+
+        virtual void RenderFrame();
+        virtual bool UnInitialize();
         Window* GetWindow() const { return m_window; }
-        SimpleConsole* GetConsole() { return m_console; }
-        /*Render::RenderContext* GetRenderContext() const { return m_context; }
 
-        std::shared_ptr<UShader> GetMainShader() const {return m_mainShader; }*/
-    private:
+    protected:
         Window* m_window = nullptr;
-        SimpleConsole* m_console;
-
-        /*Render::RenderContext* m_context = nullptr;
-        std::shared_ptr<UShader> m_mainShader = nullptr;*/
+    private:
+        void MainLoop();
     };
 }

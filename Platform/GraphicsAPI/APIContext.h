@@ -4,8 +4,7 @@
 
 #pragma once
 
-#include <glm/glm.hpp>
-#include <memory>
+#include "glm/glm.hpp"
 #include <nlohmann/json.hpp>
 
 #include "Engine/Platform/Window/Window.h"

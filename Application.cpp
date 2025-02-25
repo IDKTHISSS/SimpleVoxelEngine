@@ -13,17 +13,16 @@
 #include "imgui.h"
 #include "Core/SubSystems/Console/SimpleConsole.h"
 
-bool Core::Application::Initialize() {
-    m_console = new SimpleConsole();
-    m_console->subscribe([this](LogLevel log_level,const std::string& logMessage) {
+bool Core::BaseApplication::Initialize() {
+    SimpleConsole::Get()->subscribe([this](LogLevel log_level,const std::string& logMessage) {
         std::cout << logMessage << std::endl;
     });
 
-    m_console->AddLog(LogLevel::INFO, "Engine initialized!");
+    SimpleConsole::Get()->AddLog(LogLevel::INFO, "Engine initialized!");
     return true;
 }
 
-void Core::Application::Run() {
+void Core::BaseApplication::Run() {
     IsRunning = true;
     Core::WindowProps props;
     props.title = std::string("Simple Voxel Engine | ") + ENGINE_VERSION;
@@ -35,28 +34,28 @@ void Core::Application::Run() {
     m_window->Init(EWindowMode::OpenGL);
 
 
-     m_console->AddLog(LogLevel::INFO, "Running...");
+    SimpleConsole::Get()->AddLog(LogLevel::INFO, "Running...");
     MainLoop();
 }
-bool show_another_window = true;
-void Core::Application::MainLoop() {
-    bool wasKeyPressed = false;
+
+void Core::BaseApplication::MainLoop() {
+    bool ConsoleWindowKeyPressed = false;
     while (IsRunning) {
         m_window->GetGraphicsContext()->BeginFrame();
         IsRunning = !m_window->ShouldClose;
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL3_NewFrame();
         ImGui::NewFrame();
-        m_console->Draw();
+        SimpleConsole::Get()->Draw();
 
 
         if (m_window->InputComponent->IsKeyPressed(SDLK_GRAVE)) {
-            if (!wasKeyPressed) {
-                m_console->ToggleShow();
-                wasKeyPressed = true;
+            if (!ConsoleWindowKeyPressed) {
+                SimpleConsole::Get()->ToggleShow();
+                ConsoleWindowKeyPressed = true;
             }
         } else {
-            wasKeyPressed = false;
+            ConsoleWindowKeyPressed = false;
         }
 
         m_window->Update();
@@ -67,10 +66,10 @@ void Core::Application::MainLoop() {
     }
 }
 
-void Core::Application::RenderFrame() {
+void Core::BaseApplication::RenderFrame() {
 }
 
-bool Core::Application::UnInitialize() {
-     m_console->AddLog(LogLevel::INFO, "Engine uninitialized!");
+bool Core::BaseApplication::UnInitialize() {
+    SimpleConsole::Get()->AddLog(LogLevel::INFO, "Engine uninitialized!");
     return true;
 }

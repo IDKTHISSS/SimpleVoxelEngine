@@ -20,12 +20,12 @@ bool GLContext::Init(Core::Window *windowHandle) {
     glewExperimental = GL_TRUE;
     GLenum err = glewInit();
     if(err != GLEW_OK) {
-        Core::Application::Get()->GetConsole()->AddLog(LogLevel::ERROR, "GLEW init failed: " + std::string((const char*)glewGetErrorString(err)));
+        SimpleConsole::Get()->AddLog(LogLevel::ERROR, "GLEW init failed: " + std::string((const char*)glewGetErrorString(err)));
         return false;
     }
 
     if(!GLEW_VERSION_3_3) {
-        Core::Application::Get()->GetConsole()->AddLog(LogLevel::ERROR, "GLEW version 3.3 not supported");
+        SimpleConsole::Get()->AddLog(LogLevel::ERROR, "GLEW version 3.3 not supported");
         return false;
     }
 
@@ -38,7 +38,7 @@ bool GLContext::Init(Core::Window *windowHandle) {
 
     glDebugMessageCallback(
         [](GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
-           Core::Application::Get()->GetConsole()->AddLog(LogLevel::DEBUG, "OpenGL Debug Message (", id, "): ", message);
+           SimpleConsole::Get()->AddLog(LogLevel::DEBUG, "OpenGL Debug Message (", id, "): ", message);
         },
         nullptr
     );
@@ -46,7 +46,7 @@ bool GLContext::Init(Core::Window *windowHandle) {
     //SDL_GL_SetSwapInterval(window->IsVSync());
     GLenum glError = glGetError();
     if(glError != GL_NO_ERROR) {
-        Core::Application::Get()->GetConsole()->AddLog(LogLevel::ERROR, "OpenGL Error: " + std::string((const char*)glError));
+        SimpleConsole::Get()->AddLog(LogLevel::ERROR, "OpenGL Error: " + std::string((const char*)glError));
         return false;
     }
     return true;
@@ -67,7 +67,7 @@ void GLContext::EndFrame() {
 
 IShader* GLContext::CreateShader(nlohmann::json &shader) {
     if (!shader.contains("GLSL") && !shader["GLSL"].contains("VortexShader") && !shader["GLSL"].contains("FragmentShader")) {
-        Core::Application::Get()->GetConsole()->AddLog(LogLevel::ERROR, "GLSL or VortexShader or FragmentShader not found");
+        SimpleConsole::Get()->AddLog(LogLevel::ERROR, "GLSL or VortexShader or FragmentShader not found");
         return nullptr;
     }
     return new GLShader(shader["GLSL"]["VortexShader"], shader["GLSL"]["FragmentShader"]);
